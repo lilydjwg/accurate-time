@@ -8,6 +8,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "clap",
+ "fork",
  "num_cpus",
 ]
 
@@ -97,6 +98,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2850f2f5a82cbf437dd5af4d49848fbdfc27c157c3d010345776f952765261c5"
 dependencies = [
  "os_str_bytes",
+]
+
+[[package]]
+name = "fork"
+version = "0.1.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "57b4f1a740392e495821244cc1658d86496ac6e67a47da67e243ed401b937717"
+dependencies = [
+ "libc",
 ]
 
 [[package]]

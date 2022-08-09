@@ -42,21 +42,24 @@ fn wait_for_whole_seconds(secs: u64) {
 
 fn tmux() {
   use std::process::Command;
+  use fork::{daemon, Fork};
 
   let ncpu = num_cpus::get();
-  loop {
-    let dt = Local::now();
-    let info = render_tmux(dt, ncpu);
-    let st = Command::new("tmux")
-      .args(["set", "-g", "status-right"])
-      .arg(&info)
-      .status()
-      .unwrap();
-    if !st.success() {
-      // tmux has exited?
-      break;
+  if let Ok(Fork::Child) = daemon(false, false) {
+    loop {
+      let dt = Local::now();
+      let info = render_tmux(dt, ncpu);
+      let st = Command::new("tmux")
+        .args(["set", "-g", "status-right"])
+        .arg(&info)
+        .status()
+        .unwrap();
+      if !st.success() {
+        // tmux has exited?
+        break;
+      }
+      wait_for_whole_seconds(1);
     }
-    wait_for_whole_seconds(1);
   }
 }
 
