@@ -60,26 +60,6 @@ fn tmux() {
   }
 }
 
-fn waybar(seconds: bool) {
-  use pure_rust_locales::Locale;
-
-  let (fmt, interval) = if seconds {
-    ("%Y-%m-%d %H:%M:%S %A", 1)
-  } else {
-    ("%Y-%m-%d %H:%M %A", 60)
-  };
-
-  let locale = std::env::var("LC_TIME")
-    .or_else(|_| std::env::var("LANG"))
-    .map_or(Locale::POSIX, |s| Locale::try_from(s.split('.').next().unwrap()).unwrap_or(Locale::POSIX));
-
-  loop {
-    let dt = Local::now();
-    println!("{}", dt.format_localized(fmt, locale));
-    wait_for_whole_seconds(interval);
-  }
-}
-
 use clap::{Parser, Subcommand};
 #[derive(Parser)]
 #[clap(author, version, about, long_about = None)]
@@ -91,16 +71,11 @@ struct Cli {
 #[derive(Subcommand)]
 enum Command {
   Tmux,
-  Waybar {
-    #[clap(short, long)]
-    seconds: bool,
-  },
 }
 
 fn main() {
   let cli = Cli::parse();
   match &cli.command {
     Command::Tmux => tmux(),
-    Command::Waybar { seconds } => waybar(*seconds),
   }
 }
