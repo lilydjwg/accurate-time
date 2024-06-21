@@ -45,7 +45,7 @@ fn tmux() {
   use fork::{daemon, Fork};
 
   let ncpu = num_cpus::get();
-  if let Ok(Fork::Child) = daemon(false, false) {
+  if let Ok(Fork::Child) = daemon(false, true) {
     loop {
       let dt = Local::now();
       let info = render_tmux(dt, ncpu);
