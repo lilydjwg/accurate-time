@@ -46,6 +46,7 @@ fn tmux() {
 
   let ncpu = num_cpus::get();
   if let Ok(Fork::Child) = daemon(false, true) {
+    let mut fail_count = 0;
     loop {
       let dt = Local::now();
       let info = render_tmux(dt, ncpu);
@@ -56,7 +57,13 @@ fn tmux() {
         .unwrap();
       if !st.success() {
         // tmux has exited?
-        break;
+        // maybe it's being updated; try thrice before giving up
+        fail_count += 1;
+        if fail_count >= 3 {
+          break;
+        }
+      } else {
+        fail_count = 0;
       }
       wait_for_whole_seconds(1);
     }
