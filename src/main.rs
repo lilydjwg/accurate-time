@@ -51,9 +51,8 @@ fn tmux() {
       let st = Command::new("tmux")
         .args(["set", "-g", "status-right"])
         .arg(&info)
-        .status()
-        .unwrap();
-      if !st.success() {
+        .status();
+      if st.is_err() || !st.unwrap().success() {
         // tmux has exited?
         // maybe it's being updated; try thrice before giving up
         fail_count += 1;
